@@ -1,4 +1,4 @@
-package com.example.duocappmoviles003d
+package com.example.duocappmoviles003d.vista.modelo
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.stateIn

@@ -1,4 +1,4 @@
-package com.example.duocappmoviles003d
+package com.example.duocappmoviles003d.vistas
 
 
 import androidx.compose.foundation.Image
@@ -13,6 +13,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.duocappmoviles003d.R
 
 private val buttonColor = Color(0xFFE0B0FF)
 private val buttonTextColor = Color.Black

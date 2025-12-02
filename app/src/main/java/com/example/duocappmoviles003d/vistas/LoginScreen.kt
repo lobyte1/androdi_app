@@ -1,5 +1,6 @@
-package com.example.duocappmoviles003d
+package com.example.duocappmoviles003d.vistas
 
+import android.util.Patterns
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.example.duocappmoviles003d.R
 
 private val buttonColor = Color(0xFFE0B0FF)
 private val buttonTextColor = Color.Black
@@ -104,7 +106,7 @@ fun LoginScreen(
                         if (email.isBlank()) {
                             emailError = "El correo no puede estar vacío"
                             esValido = false
-                        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                             emailError = "El formato del correo no es válido"
                             esValido = false
                         }

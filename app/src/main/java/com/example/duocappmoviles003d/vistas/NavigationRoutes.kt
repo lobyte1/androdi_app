@@ -1,4 +1,4 @@
-package com.example.duocappmoviles003d
+package com.example.duocappmoviles003d.vistas
 
 object NavigationRoutes {
     const val ENTRY = "entry"

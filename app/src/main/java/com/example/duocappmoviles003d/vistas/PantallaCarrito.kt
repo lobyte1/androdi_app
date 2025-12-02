@@ -1,4 +1,4 @@
-package com.example.duocappmoviles003d
+package com.example.duocappmoviles003d.vistas
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -23,9 +23,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.duocappmoviles003d.R
 // IMPORTANTE: Importamos tus modelos desde la carpeta 'model'
-import com.example.duocappmoviles003d.model.Producto
 import com.example.duocappmoviles003d.model.CartItem
+import com.example.duocappmoviles003d.vista.modelo.CartViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -256,7 +257,10 @@ fun ContenidoCarrito(
                     .padding(horizontal = 16.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.outlinedButtonColors(contentColor = AppPrimaryColor),
-                border = ButtonDefaults.outlinedButtonBorder.copy(brush = Brush.horizontalGradient(listOf(AppPrimaryColor, AppPrimaryColor)))
+                border = ButtonDefaults.outlinedButtonBorder.copy(brush = Brush.horizontalGradient(listOf(
+                    AppPrimaryColor,
+                    AppPrimaryColor
+                )))
             ) {
                 Text("Seguir comprando", fontSize = 16.sp)
             }

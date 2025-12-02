@@ -1,4 +1,4 @@
-package com.example.duocappmoviles003d
+package com.example.duocappmoviles003d.vistas
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,6 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.duocappmoviles003d.vistas.NavigationRoutes
+import com.example.duocappmoviles003d.R
 import com.example.duocappmoviles003d.model.Producto
 import kotlinx.coroutines.launch
 
