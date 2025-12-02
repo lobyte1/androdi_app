@@ -24,9 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.duocappmoviles003d.model.Producto
 import kotlinx.coroutines.launch
-
-data class Producto(val nombre: String, val precio: String, val imagenResId: Int)
 
 val AppPrimaryColor = Color(0xFFE0B0FF)
 

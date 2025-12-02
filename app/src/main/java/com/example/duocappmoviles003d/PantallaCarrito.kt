@@ -23,10 +23,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+// IMPORTANTE: Importamos tus modelos desde la carpeta 'model'
+import com.example.duocappmoviles003d.model.Producto
+import com.example.duocappmoviles003d.model.CartItem
 import kotlinx.coroutines.launch
-
-data class CartItem(val producto: Producto, var cantidad: Int)
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -266,10 +266,7 @@ fun ContenidoCarrito(
 }
 
 @Composable
-
 fun CartItemCard(cartItem: CartItem, cartViewModel: CartViewModel) {
-
-
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -295,7 +292,7 @@ fun CartItemCard(cartItem: CartItem, cartViewModel: CartViewModel) {
                 }
             )
         }
-        // El botón de eliminar ahora llama a la función correspondiente en el ViewModel.
+        // El botón de eliminar llama a la función correspondiente en el ViewModel.
         IconButton(onClick = { cartViewModel.removeFromCart(cartItem) }) {
             Icon(Icons.Default.Delete, contentDescription = "Eliminar producto", tint = Color.Gray)
         }
