@@ -23,9 +23,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.duocappmoviles003d.R
-// IMPORTANTE: Importamos tus modelos desde la carpeta 'model'
 import com.example.duocappmoviles003d.model.CartItem
+import com.example.duocappmoviles003d.ui.theme.AppPrimaryColor // <--- IMPORT NUEVO
 import com.example.duocappmoviles003d.vista.modelo.CartViewModel
 import kotlinx.coroutines.launch
 
@@ -257,10 +258,7 @@ fun ContenidoCarrito(
                     .padding(horizontal = 16.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.outlinedButtonColors(contentColor = AppPrimaryColor),
-                border = ButtonDefaults.outlinedButtonBorder.copy(brush = Brush.horizontalGradient(listOf(
-                    AppPrimaryColor,
-                    AppPrimaryColor
-                )))
+                border = ButtonDefaults.outlinedButtonBorder.copy(brush = Brush.horizontalGradient(listOf(AppPrimaryColor, AppPrimaryColor)))
             ) {
                 Text("Seguir comprando", fontSize = 16.sp)
             }
@@ -275,13 +273,27 @@ fun CartItemCard(cartItem: CartItem, cartViewModel: CartViewModel) {
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            painter = painterResource(id = cartItem.producto.imagenResId),
-            contentDescription = cartItem.producto.nombre,
-            modifier = Modifier
-                .size(100.dp)
-                .clip(RoundedCornerShape(12.dp))
-        )
+        // IMAGEN: Lógica para Coil (Supabase) o Local
+        if (cartItem.producto.imagenUrl.isNotEmpty()) {
+            AsyncImage(
+                model = cartItem.producto.imagenUrl,
+                contentDescription = cartItem.producto.nombre,
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(RoundedCornerShape(12.dp)),
+                contentScale = ContentScale.Crop
+            )
+        } else {
+            Image(
+                painter = painterResource(id = cartItem.producto.imagenResId),
+                contentDescription = cartItem.producto.nombre,
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(RoundedCornerShape(12.dp)),
+                contentScale = ContentScale.Crop
+            )
+        }
+
         Spacer(modifier = Modifier.width(16.dp))
         Column(
             modifier = Modifier.weight(1f)
@@ -289,14 +301,12 @@ fun CartItemCard(cartItem: CartItem, cartViewModel: CartViewModel) {
             Text(cartItem.producto.nombre, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(8.dp))
             QuantitySelector(
-                // La cantidad se lee directamente del item y los cambios se envían al ViewModel.
                 quantity = cartItem.cantidad,
                 onQuantityChange = { newQuantity ->
                     cartViewModel.updateQuantity(cartItem, newQuantity)
                 }
             )
         }
-        // El botón de eliminar llama a la función correspondiente en el ViewModel.
         IconButton(onClick = { cartViewModel.removeFromCart(cartItem) }) {
             Icon(Icons.Default.Delete, contentDescription = "Eliminar producto", tint = Color.Gray)
         }

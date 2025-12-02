@@ -16,22 +16,27 @@ class ProductsViewModel : ViewModel() {
     val productos: StateFlow<List<Producto>> = _productos.asStateFlow()
 
     init {
+
         fetchProductos()
     }
 
     fun fetchProductos() {
         viewModelScope.launch {
             try {
+                println("Iniciando descarga de productos...")
+
+
                 val listaReales = SupabaseClient.client
                     .from("productos")
                     .select()
                     .decodeList<Producto>()
 
+                println("Productos descargados: ${listaReales.size}")
                 _productos.value = listaReales
 
             } catch (e: Exception) {
-                println("Error al traer productos: ${e.message}")
-
+                println("Error grave al descargar: ${e.message}")
+                e.printStackTrace()
             }
         }
     }

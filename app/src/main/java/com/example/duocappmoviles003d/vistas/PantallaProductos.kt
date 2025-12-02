@@ -21,18 +21,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel // Importante para inyectar el ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.example.duocappmoviles003d.R
-import com.example.duocappmoviles003d.NavigationRoutes
 import com.example.duocappmoviles003d.model.Producto
+import com.example.duocappmoviles003d.ui.theme.AppPrimaryColor // <--- IMPORT NUEVO
 import com.example.duocappmoviles003d.vista.modelo.CartViewModel
 import com.example.duocappmoviles003d.vista.modelo.ProductsViewModel
-import com.example.duocappmoviles003d.vistas.HomeTopAppBar // Asegúrate de que este import sea correcto según dónde tengas el TopBar
-import com.example.duocappmoviles003d.vistas.AppPrimaryColor // Lo mismo para el color
 import kotlinx.coroutines.launch
-
-// Definimos el color aquí por si no se importa de otro lado
-val AppPrimaryColor = Color(0xFFE0B0FF)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,8 +36,6 @@ fun PantallaProductos(
     username: String,
     onNavigate: (String) -> Unit,
     cartViewModel: CartViewModel,
-    // Inyectamos el ProductsViewModel aquí.
-    // Si no se pasa uno, se crea uno nuevo automáticamente.
     productsViewModel: ProductsViewModel = viewModel()
 ) {
     val estadoMenuHamburguesa = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -125,7 +119,6 @@ fun PantallaProductos(
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            // Pasamos ambos ViewModels al contenido
             ContenidoProductos(
                 cartViewModel = cartViewModel,
                 productsViewModel = productsViewModel
@@ -159,10 +152,8 @@ fun ContenidoProductos(
     cartViewModel: CartViewModel,
     productsViewModel: ProductsViewModel
 ) {
-    // 1. Observamos la lista completa del ViewModel
     val todosLosProductos by productsViewModel.productos.collectAsState()
 
-    // 2. Filtramos la lista en tiempo real para crear las secciones
     val productosHombre = todosLosProductos.filter { it.categoria == "hombre" }
     val productosMujer = todosLosProductos.filter { it.categoria == "mujer" }
     val productosUnisex = todosLosProductos.filter { it.categoria == "unisex" }
@@ -212,7 +203,6 @@ fun ContenidoProductos(
             }
         }
 
-        // SECCIÓN HOMBRE
         if (productosHombre.isNotEmpty()) {
             item(span = { GridItemSpan(2) }) {
                 Text(
@@ -230,7 +220,6 @@ fun ContenidoProductos(
             }
         }
 
-        // SECCIÓN MUJER
         if (productosMujer.isNotEmpty()) {
             item(span = { GridItemSpan(2) }) {
                 Text(
@@ -248,7 +237,6 @@ fun ContenidoProductos(
             }
         }
 
-        // SECCIÓN UNISEX
         if (productosUnisex.isNotEmpty()) {
             item(span = { GridItemSpan(2) }) {
                 Text(
@@ -284,8 +272,17 @@ fun ProductoCard(
             modifier = Modifier.padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // IMAGEN: Lógica mixta (Local o URL)
-            if (producto.imagenResId != 0) {
+            if (producto.imagenUrl.isNotEmpty()) {
+                AsyncImage(
+                    model = producto.imagenUrl,
+                    contentDescription = producto.nombre,
+                    modifier = Modifier
+                        .height(120.dp)
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
                 Image(
                     painter = painterResource(id = producto.imagenResId),
                     contentDescription = producto.nombre,
@@ -295,9 +292,6 @@ fun ProductoCard(
                         .clip(RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.Crop
                 )
-            } else {
-                // Aquí pondrás AsyncImage(model = producto.imagenUrl) cuando uses Supabase
-                Box(modifier = Modifier.height(120.dp).fillMaxWidth().background(Color.Gray))
             }
 
             Spacer(modifier = Modifier.height(8.dp))

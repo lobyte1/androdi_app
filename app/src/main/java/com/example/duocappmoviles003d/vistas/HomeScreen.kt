@@ -24,20 +24,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.duocappmoviles003d.vistas.NavigationRoutes
 import com.example.duocappmoviles003d.R
 import com.example.duocappmoviles003d.model.Producto
+import com.example.duocappmoviles003d.ui.theme.AppPrimaryColor // <--- IMPORT NUEVO
 import kotlinx.coroutines.launch
 
-val AppPrimaryColor = Color(0xFFE0B0FF)
-
+// DATOS QUEMADOS (HARDCODED) PARA EL HOME
+// Nota: Como este es el Home, mantenemos estos datos locales por ahora
 val ofertaPrincipal = Producto("Perfume Cacharel", "$60.000", R.drawable.cacharel)
 val productosDestacados = listOf(
     Producto("Dior Sauvage", "$140.000", R.drawable.diorsauvage),
     Producto("Acqua Di Gio", "$79.990", R.drawable.acquadigio),
     Producto("Paco Rabanne Invictus", "$85.000", R.drawable.invictus)
 )
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,7 +59,7 @@ fun HomeScreen(username: String, onNavigate: (String) -> Unit) {
                 )
                 NavigationDrawerItem(
                     label = { Text("Inicio") },
-                    selected = false,
+                    selected = true,
                     onClick = {
                         onNavigate(NavigationRoutes.createHomeRoute(username))
                         scope.launch { estadoMenuHamburguesa.close() }
