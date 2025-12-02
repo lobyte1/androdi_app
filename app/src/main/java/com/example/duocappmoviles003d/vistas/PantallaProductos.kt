@@ -21,39 +21,28 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel // Importante para inyectar el ViewModel
 import com.example.duocappmoviles003d.R
+import com.example.duocappmoviles003d.NavigationRoutes
 import com.example.duocappmoviles003d.model.Producto
 import com.example.duocappmoviles003d.vista.modelo.CartViewModel
+import com.example.duocappmoviles003d.vista.modelo.ProductsViewModel
+import com.example.duocappmoviles003d.vistas.HomeTopAppBar // Asegúrate de que este import sea correcto según dónde tengas el TopBar
+import com.example.duocappmoviles003d.vistas.AppPrimaryColor // Lo mismo para el color
 import kotlinx.coroutines.launch
 
-val productosHombre = listOf(
-    Producto("Dior Sauvage", "$140.000", R.drawable.diorsauvage),
-    Producto("Acqua di Gio", "$79.990", R.drawable.acquadigio),
-    Producto("Versace Eros Flame", "$69.990", R.drawable.versaceeros),
-    Producto("Jean Paul Gaultier", "$69.990", R.drawable.jeanpaul),
-    Producto("212 NYC Men", "$55.000", R.drawable.nyc),
-    Producto("Paco Rabanne Invictus", "$85.000", R.drawable.invictus),
-)
-
-val productosMujer = listOf(
-    Producto("Good Girl", "$120.000", R.drawable.goodgirl),
-    Producto("La Vie Est Belle", "$110.000", R.drawable.lavie),
-    Producto("Black Opium", "$95.000", R.drawable.blacko),
-    Producto("Perfume Cacharel", "$60.000", R.drawable.cacharel),
-    Producto("Giorgio Armani My Way", "$90.000", R.drawable.myway)
-)
-
-val productosUnisex = listOf(
-    Producto("Tom Ford Oud Wood", "$180.000", R.drawable.tomford),
-    Producto("Jo Malone Lime Basil & Mandarin", "$130.000", R.drawable.jomalone),
-)
+// Definimos el color aquí por si no se importa de otro lado
+val AppPrimaryColor = Color(0xFFE0B0FF)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PantallaProductos(
     username: String,
     onNavigate: (String) -> Unit,
-    cartViewModel: CartViewModel
+    cartViewModel: CartViewModel,
+    // Inyectamos el ProductsViewModel aquí.
+    // Si no se pasa uno, se crea uno nuevo automáticamente.
+    productsViewModel: ProductsViewModel = viewModel()
 ) {
     val estadoMenuHamburguesa = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -136,7 +125,11 @@ fun PantallaProductos(
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            ContenidoProductos(cartViewModel = cartViewModel)
+            // Pasamos ambos ViewModels al contenido
+            ContenidoProductos(
+                cartViewModel = cartViewModel,
+                productsViewModel = productsViewModel
+            )
 
             HomeTopAppBar(
                 modifier = Modifier.align(Alignment.TopCenter),
@@ -161,7 +154,19 @@ fun PantallaProductos(
 }
 
 @Composable
-fun ContenidoProductos(modifier: Modifier = Modifier, cartViewModel: CartViewModel) {
+fun ContenidoProductos(
+    modifier: Modifier = Modifier,
+    cartViewModel: CartViewModel,
+    productsViewModel: ProductsViewModel
+) {
+    // 1. Observamos la lista completa del ViewModel
+    val todosLosProductos by productsViewModel.productos.collectAsState()
+
+    // 2. Filtramos la lista en tiempo real para crear las secciones
+    val productosHombre = todosLosProductos.filter { it.categoria == "hombre" }
+    val productosMujer = todosLosProductos.filter { it.categoria == "mujer" }
+    val productosUnisex = todosLosProductos.filter { it.categoria == "unisex" }
+
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = modifier
@@ -207,55 +212,63 @@ fun ContenidoProductos(modifier: Modifier = Modifier, cartViewModel: CartViewMod
             }
         }
 
-        item(span = { GridItemSpan(2) }) {
-            Text(
-                text = "Perfumes de Hombre",
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
-            )
-        }
-        items(productosHombre) { producto ->
-            ProductoCard(
-                producto = producto,
-                modifier = Modifier.padding(horizontal = 16.dp),
-                cartViewModel = cartViewModel
-            )
-        }
-
-        item(span = { GridItemSpan(2) }) {
-            Text(
-                text = "Perfumes de Mujer",
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 24.dp)
-            )
-        }
-        items(productosMujer) { producto ->
-            ProductoCard(
-                producto = producto,
-                modifier = Modifier.padding(horizontal = 16.dp),
-                cartViewModel = cartViewModel
-            )
+        // SECCIÓN HOMBRE
+        if (productosHombre.isNotEmpty()) {
+            item(span = { GridItemSpan(2) }) {
+                Text(
+                    text = "Perfumes de Hombre",
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                )
+            }
+            items(productosHombre) { producto ->
+                ProductoCard(
+                    producto = producto,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    cartViewModel = cartViewModel
+                )
+            }
         }
 
-        item(span = { GridItemSpan(2) }) {
-            Text(
-                text = "Perfumes Unisex",
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 24.dp)
-            )
+        // SECCIÓN MUJER
+        if (productosMujer.isNotEmpty()) {
+            item(span = { GridItemSpan(2) }) {
+                Text(
+                    text = "Perfumes de Mujer",
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 24.dp)
+                )
+            }
+            items(productosMujer) { producto ->
+                ProductoCard(
+                    producto = producto,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    cartViewModel = cartViewModel
+                )
+            }
         }
-        items(productosUnisex) { producto ->
-            ProductoCard(
-                producto = producto,
-                modifier = Modifier.padding(horizontal = 16.dp),
-                cartViewModel = cartViewModel
-            )
+
+        // SECCIÓN UNISEX
+        if (productosUnisex.isNotEmpty()) {
+            item(span = { GridItemSpan(2) }) {
+                Text(
+                    text = "Perfumes Unisex",
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 24.dp)
+                )
+            }
+            items(productosUnisex) { producto ->
+                ProductoCard(
+                    producto = producto,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    cartViewModel = cartViewModel
+                )
+            }
         }
     }
 }
 
 @Composable
-
 fun ProductoCard(
     producto: Producto,
     modifier: Modifier = Modifier,
@@ -271,15 +284,22 @@ fun ProductoCard(
             modifier = Modifier.padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                painter = painterResource(id = producto.imagenResId),
-                contentDescription = producto.nombre,
-                modifier = Modifier
-                    .height(120.dp)
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(8.dp)),
-                contentScale = ContentScale.Crop
-            )
+            // IMAGEN: Lógica mixta (Local o URL)
+            if (producto.imagenResId != 0) {
+                Image(
+                    painter = painterResource(id = producto.imagenResId),
+                    contentDescription = producto.nombre,
+                    modifier = Modifier
+                        .height(120.dp)
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                // Aquí pondrás AsyncImage(model = producto.imagenUrl) cuando uses Supabase
+                Box(modifier = Modifier.height(120.dp).fillMaxWidth().background(Color.Gray))
+            }
+
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 producto.nombre,
@@ -297,7 +317,6 @@ fun ProductoCard(
             )
             Spacer(modifier = Modifier.height(8.dp))
             Button(
-                // boton agregar producto
                 onClick = { cartViewModel.addToCart(producto) },
                 colors = ButtonDefaults.buttonColors(containerColor = AppPrimaryColor),
                 modifier = Modifier.fillMaxWidth()
