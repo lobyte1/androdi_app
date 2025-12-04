@@ -3,6 +3,8 @@ Este proyecto es la implementación móvil de la perfumería Rara Perfumes, desa
 
 La aplicación está diseñada para manejar el flujo de autenticación de un usuario, cumpliendo con el requisito de tener tres pantallas mínimas y un formulario con validaciones. 
 
+La aplicacion esta directamente conectada a una base de datos en Supabase en la cual se supervisan los productos.
+
 # Integrantes 
 Rodrigo Ruiz, Luis Uribe.
 
