@@ -29,8 +29,6 @@ import com.example.duocappmoviles003d.model.Producto
 import com.example.duocappmoviles003d.ui.theme.AppPrimaryColor // <--- IMPORT NUEVO
 import kotlinx.coroutines.launch
 
-// DATOS QUEMADOS (HARDCODED) PARA EL HOME
-// Nota: Como este es el Home, mantenemos estos datos locales por ahora
 val ofertaPrincipal = Producto("Perfume Cacharel", "$60.000", R.drawable.cacharel)
 val productosDestacados = listOf(
     Producto("Dior Sauvage", "$140.000", R.drawable.diorsauvage),
