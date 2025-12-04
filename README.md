@@ -18,8 +18,6 @@ Link de Figma (Boceto): https://www.figma.com/design/4444ZUYV6kaXXVQ8ICnZSE/AppM
 3.- Ejecutar la aplicacion pero antes asegúrate de que Android Studio haya sincronizado el proyecto (espera a que termine Gradle), selecciona un emulador (API 28 o superior) o un dispositivo físico,
 finalmente haz clic en el botón "Run" (▶️) para iniciar la aplicacion.
 
-4.- Trabajar en la rama ev2/Roro-y-el-otro.
-
 # Tecnologias Usadas
 | Tecnología | Rol | Detalle |
 | :--- | :--- | :--- |
